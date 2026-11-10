@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090610">
+  <meta name="description" content="ZOOM BAR Live Chat">
+  <title>ZOOM BAR | LIVE CHAT</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at top, #32105a 0%, transparent 48%),
+        #090610;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 430px;
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 42px;
+    }
+
+    .logo {
+      width: 72px;
+      height: 72px;
+      margin: auto auto 18px;
+      border: 2px solid #b45cff;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      font-weight: 900;
+      color: #d9a5ff;
+      box-shadow: 0 0 30px #9d37ff55;
+    }
+
+    .brand h1 {
+      font-size: 30px;
+      letter-spacing: 5px;
+      font-weight: 900;
+    }
+
+    .brand p {
+      color: #bcaacb;
+      font-size: 12px;
+      letter-spacing: 4px;
+      margin-top: 10px;
+    }
+
+    .tagline {
+      text-align: center;
+      font-size: 13px;
+      color: #cbb8dc;
+      margin-bottom: 26px;
+    }
+
+    .card {
+      background: #171020;
+      border: 1px solid #50316c;
+      border-radius: 22px;
+      padding: 25px 21px;
+      box-shadow: 0 15px 50px #0008;
+    }
+
+    .card h2 {
+      font-size: 21px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #a99bb6;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: #d9c9e7;
+      margin-bottom: 9px;
+    }
+
+    input, textarea {
+      width: 100%;
+      border: 1px solid #49335b;
+      border-radius: 12px;
+      background: #0e0a14;
+      color: white;
+      padding: 15px;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 20px;
+      font-family: inherit;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #bd67ff;
+      box-shadow: 0 0 12px #a238ff33;
+    }
+
+    textarea {
+      height: 115px;
+      resize: none;
+      line-height: 1.5;
+    }
+
+    .counter {
+      text-align: right;
+      color: #887a98;
+      font-size: 11px;
+      margin-top: -13px;
+      margin-bottom: 20px;
+    }
+
+    .send {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      background: linear-gradient(100deg, #7024bd, #bd52ff);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      cursor: pointer;
+      box-shadow: 0 5px 22px #a13aff44;
+    }
+
+    .send:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .notice {
+      display: none;
+      padding: 13px;
+      border-radius: 10px;
+      margin-top: 17px;
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .success {
+      display: block;
+      color: #a8ffd0;
+      background: #123426;
+    }
+
+    .error {
+      display: block;
+      color: #ffaaaa;
+      background: #411c27;
+    }
+
+    .footer {
+      text-align: center;
+      color: #776b83;
+      font-size: 10px;
+      margin-top: 25px;
+      letter-spacing: 2px;
+    }
+
+    .website-trap {
+      position: absolute;
+      left: -9999px;
+      opacity: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+
+    <header class="brand">
+      <div class="logo">Z</div>
+      <h1>ZOOM BAR</h1>
+      <p>PALANGKARAYA</p>
+    </header>
+
+    <p class="tagline">
+      YOUR VOICE. YOUR MESSAGE. OUR NIGHT.
+    </p>
+
+    <section class="card">
+      <h2>LIVE CHAT</h2>
+
+      <p class="subtitle">
+        Kirim pesanmu dan jadilah bagian
+        dari malam ini bersama ZOOM BAR.
+      </p>
+
+      <form id="chatForm">
+
+        <label for="sender">YOUR NAME</label>
+        <input
+          id="sender"
+          type="text"
+          maxlength="30"
+          placeholder="Masukkan nama kamu"
+          autocomplete="nickname"
+          required
+        >
+
+        <label for="message">YOUR MESSAGE</label>
+        <textarea
+          id="message"
+          maxlength="200"
+          placeholder="Tulis pesan kamu di sini..."
+          required
+        ></textarea>
+
+        <div class="counter">
+          <span id="count">0</span>/200
+        </div>
+
+        <div class="website-trap" aria-hidden="true">
+          <label for="website">Website</label>
+          <input id="website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <button class="send" id="sendBtn" type="submit">
+          SEND MESSAGE
+        </button>
+
+        <div class="notice" id="notice" role="status"></div>
+
+      </form>
+    </section>
+
+    <footer class="footer">
+      POWERED BY ZOOM BAR
+    </footer>
+
+  </main>
+
+  <script>
+    // ISI DENGAN INFORMASI PROJECT SUPABASE
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
+
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    const form = document.getElementById("chatForm");
+    const nameInput = document.getElementById("sender");
+    const messageInput = document.getElementById("message");
+    const sendBtn = document.getElementById("sendBtn");
+    const notice = document.getElementById("notice");
+    const count = document.getElementById("count");
+
+    messageInput.addEventListener("input", () => {
+      count.textContent = messageInput.value.length;
+    });
+
+    function showNotice(message, type) {
+      notice.textContent = message;
+      notice.className = "notice " + type;
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const sender = nameInput.value.trim();
+      const message = messageInput.value.trim();
+
+      if (!sender || !message) {
+        showNotice("Nama dan pesan wajib diisi.", "error");
+        return;
+      }
+
+      if (sender.length > 30 || message.length > 200) {
+        showNotice("Panjang pesan atau nama melebihi batas.", "error");
+        return;
+      }
+
+      if (document.getElementById("website").value !== "") {
+        return;
+      }
+
+      sendBtn.disabled = true;
+      sendBtn.textContent = "SENDING...";
+
+      try {
+        const { error } = await client
+          .from("live_messages")
+          .insert([{
+            sender_name: sender,
+            message: message,
+            status: "pending"
+          }]);
+
+        if (error) throw error;
+
+        showNotice(
+          "Pesan berhasil dikirim! Menunggu persetujuan operator.",
+          "success"
+        );
+
+        nameInput.value = "";
+        messageInput.value = "";
+        count.textContent = "0";
+
+      } catch (error) {
+        console.error(error);
+
+        showNotice(
+          "Pesan gagal dikirim. Silakan coba lagi.",
+          "error"
+        );
+
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = "SEND MESSAGE";
+      }
+    });
+  </script>
+</body>
+</html>
