@@ -324,13 +324,18 @@
         messageInput.value = "";
         count.textContent = "0";
 
-      } catch (error) {
-        console.error("SUPABASE EROR:", error);
+} catch (error) {
+  console.error("SUPABASE ERROR:", error);
 
-        showNotice(
-          "ERROR: "Pesan gagal dikirim. Silakan coba lagi.",
-          "error"
-        );
+  alert(
+    "ERROR PENGIRIMAN:\n" +
+    (error.message || JSON.stringify(error))
+  );
+
+  showNotice(
+    "Pesan gagal dikirim. Silakan coba lagi.",
+    "error"
+  );
 
       } finally {
         sendBtn.disabled = false;
